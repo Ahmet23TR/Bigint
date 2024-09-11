@@ -17,11 +17,11 @@ public class PlayerMovement : NetworkBehaviour
     public Camera Camera;
     public float _rotationvelocity;
 
-    private void Start()
-    {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-    }
+    // private void Start()
+    // {
+    //     Cursor.lockState = CursorLockMode.Locked;
+    //     Cursor.visible = false;
+    // }
 
     private void Awake()
     {
