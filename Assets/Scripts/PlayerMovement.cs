@@ -68,22 +68,22 @@ public class PlayerMovement : NetworkBehaviour
             return;
         }
 
-        // Yerçekimini sürekli uygula
+        // Yerçekimi
         if (!_controller.isGrounded)
         {
-            _velocity.y += GravityValue * Runner.DeltaTime;  // Yerçekimi etkisi
+            _velocity.y += GravityValue * Runner.DeltaTime; 
         }
 
-        // Zıplama işlemi
+        // Zıplama 
         if (_jumpPressed && _controller.isGrounded)
         {
-            _velocity.y = JumpForce;  // Zıplama kuvvetini uygula
+            _velocity.y = JumpForce;  
             _animator.SetTrigger("Jump");
         }
 
         if (_jumpPressed2 && _controller.isGrounded)
         {
-            _velocity.y = JumpForce;  // Alternatif zıplama (ikinci buton)
+            _velocity.y = JumpForce;  
             _animator.SetTrigger("Jump2");
         }
 
@@ -94,13 +94,12 @@ public class PlayerMovement : NetworkBehaviour
 
         _controller.Move(move + _velocity * Runner.DeltaTime);
 
-        // Yere inildiğinde hızı sıfırla
+
         if (_controller.isGrounded)
         {
-            _velocity.y = -1f;  // Hafif negatif bir değerle yere yapışmayı sağla
+            _velocity.y = -1f;  
         }
 
-        // Durumları sıfırlama
         _jumpPressed = false;
         _jumpPressed2 = false;
         _attackPressed1 = false;
@@ -118,7 +117,6 @@ public class PlayerMovement : NetworkBehaviour
         bool isRunning = Input.GetKey(KeyCode.LeftShift);
         float currentSpeed = isRunning ? RunSpeed : WalkSpeed;
 
-        // Kamera yönünü almak ve hareket etmek
         Quaternion cameraRotationY = Quaternion.Euler(0, Camera.transform.eulerAngles.y, 0);
         Vector3 move = cameraRotationY * new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")) * currentSpeed * Runner.DeltaTime;
 
@@ -129,11 +127,9 @@ public class PlayerMovement : NetworkBehaviour
             gameObject.transform.forward = move;
         }
 
-        // Animasyonları yönetme
         _animator.SetBool("isRunning", isRunning);
         _animator.SetBool("isWalking", new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")).magnitude > 0 && !isRunning);
 
-        // Koşarken saldırı yapılamaz
         if (_attackPressed1 && !isRunning)
         {
             _animator.SetTrigger("Attack");

@@ -316,8 +316,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Your Name
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8a645e7fb2ae34d19acdf05204a7da2e, type: 2}
+  m_sharedMaterial: {fileID: -9026448170849612419, guid: 8a645e7fb2ae34d19acdf05204a7da2e, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1591,6 +1591,7 @@ MonoBehaviour:
   GravityValue: -9.81
   Camera: {fileID: 0}
   _rotationvelocity: 0
+  isChatOpen: 0
 --- !u!114 &4915339727563842671
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1607,6 +1608,7 @@ MonoBehaviour:
   Distance: 5
   Height: 2
   MouseSensitivity: 10
+  WebGLMouseSensitivity: 0.5
   RotationSmoothTime: 0.12
 --- !u!114 &8665790030060184720
 MonoBehaviour:

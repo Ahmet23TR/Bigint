@@ -14,13 +14,13 @@ public class PhotonChatManager : MonoBehaviour, IChatClientListener
     ChatClient chatClient;
     bool isConnected;
 
-    [SerializeField] GameObject chatPanel;  // Chat panelini referans alalım
-    [SerializeField] InputField chatField;  // Chat input alanı
-    private bool isChatOpen = false;        // Chat açık mı kontrolü
+    [SerializeField] GameObject chatPanel;  
+    [SerializeField] InputField chatField;  
+    private bool isChatOpen = false;        
 
     void Start()
     {
-        // Oyun başladığında chat paneli kapalı olacak
+        // Başlangıçta chat paneli kapalı 
         chatPanel.SetActive(false);
     }
 
@@ -37,7 +37,6 @@ public class PhotonChatManager : MonoBehaviour, IChatClientListener
             ToggleChat();
         }
 
-        // Chat paneli açıkken ve Enter tuşuna basıldığında mesaj gönder
         if (isChatOpen && chatField.text != "" && Input.GetKey(KeyCode.Return))
         {
             SubmitPublicChatOnClick();
@@ -49,10 +48,8 @@ public class PhotonChatManager : MonoBehaviour, IChatClientListener
     {
         isChatOpen = !isChatOpen;  // Chat açık mı kapalı mı tersine çevir
 
-        // Chat panelini aç/kapat
         chatPanel.SetActive(isChatOpen);
 
-        // Chat'e bağlanmadıysa, chat'e bağlan
         if (isChatOpen && !isConnected)
         {
             ChatConnectOnClick();
@@ -61,9 +58,20 @@ public class PhotonChatManager : MonoBehaviour, IChatClientListener
         // Karakter hareketini durdur/aktif et
         var playerMovement = FindObjectOfType<PlayerMovement>();
         if (playerMovement != null)
+    {
+        playerMovement.isChatOpen = isChatOpen;
+
+        // Chat açıldığında animasyonları durdur
+        if (isChatOpen)
         {
-            playerMovement.isChatOpen = isChatOpen;
+            Animator animator = playerMovement.GetComponent<Animator>();
+            if (animator != null)
+            {
+                animator.SetBool("isWalking", false);
+                animator.SetBool("isRunning", false);
+            }
         }
+    }
 
         if (isChatOpen)
         {
@@ -76,13 +84,12 @@ public class PhotonChatManager : MonoBehaviour, IChatClientListener
         }
     }
 
-    // Chat bağlantısını kurma fonksiyonu
+    // Chat bağlantısını kurma 
     public void ChatConnectOnClick()
     {
         isConnected = true;
         chatClient = new ChatClient(this);
 
-        // GameManager.Instance.PlayerNickName ile bağlanıyoruz
         chatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat, PhotonNetwork.AppVersion, new AuthenticationValues(GameManager.Instance.PlayerNickName));
 
         Debug.Log("Connecting to chat...");
@@ -108,7 +115,7 @@ public class PhotonChatManager : MonoBehaviour, IChatClientListener
         if (networkObject.HasInputAuthority)
         {
             Debug.Log("Yerel oyuncu, hareket devre dışı bırakılıyor.");
-            playerController.enabled = false; // Karakter hareketini kapat
+            playerController.enabled = false; 
         }
         else
         {
@@ -135,7 +142,7 @@ public class PhotonChatManager : MonoBehaviour, IChatClientListener
         if (networkObject.HasInputAuthority)
         {
             Debug.Log("Yerel oyuncu, hareket tekrar etkinleştiriliyor.");
-            playerController.enabled = true; // Karakter hareketini tekrar aç
+            playerController.enabled = true; 
         }
     }
 
@@ -149,21 +156,18 @@ public class PhotonChatManager : MonoBehaviour, IChatClientListener
     #endregion General
 
     #region PublicChat
-    // Mesaj gönderme fonksiyonu
     public void SubmitPublicChatOnClick()
     {
-        // Öncelikle chatClient'in null olup olmadığını kontrol ediyoruz
         if (chatClient == null || !isConnected)
         {
             Debug.LogError("ChatClient is not connected or initialized.");
-            return;  // Eğer chatClient null ise, fonksiyondan çıkıyoruz
+            return;  
         }
 
         if (!string.IsNullOrEmpty(chatField.text))
         {
-            // ChatClient'e mesajı gönderiyoruz
             chatClient.PublishMessage("RegionChannel", chatField.text);  
-            chatField.text = "";  // Input alanını temizliyoruz
+            chatField.text = "";  
 
             // Chat açık kaldığı sürece odak kaybolmasın
             chatField.ActivateInputField();
@@ -194,16 +198,15 @@ public class PhotonChatManager : MonoBehaviour, IChatClientListener
     public void OnConnected()
     {
         Debug.Log("Connected to chat server");
-        isConnected = true;  // Bağlantının sağlandığını belirtiyoruz
+        isConnected = true;  
 
-        // Bağlanıldığında RegionChannel'e abone ol
         chatClient.Subscribe(new string[] { "RegionChannel" });
     }
 
     public void OnDisconnected()
     {
         Debug.Log("Disconnected from chat server");
-        isConnected = false;  // Bağlantının koptuğunu belirtiyoruz
+        isConnected = false;  
     }
 
     public void OnGetMessages(string channelName, string[] senders, object[] messages)

@@ -6,6 +6,7 @@ public class ThirdPersonCamera : MonoBehaviour
     public float Distance = 5.0f;
     public float Height = 2.0f;
     public float MouseSensitivity = 10f;
+    public float WebGLMouseSensitivity = 3f;
     public float RotationSmoothTime = 0.12f;
 
     private Vector3 currentRotation;
@@ -13,7 +14,13 @@ public class ThirdPersonCamera : MonoBehaviour
     private float verticalRotation;
     private float horizontalRotation;
 
-
+    void Start()
+    {
+        if (Application.platform == RuntimePlatform.WebGLPlayer)
+        {
+            MouseSensitivity = WebGLMouseSensitivity;
+        }
+    }
 
     void LateUpdate()
     {

@@ -7,10 +7,27 @@ using UnityEngine.UI;
 public class StartSceneMenu : MonoBehaviour
 {
     public InputField inputField;
+    public Button startButton;  
+
+    void Start()
+    {
+        inputField.ActivateInputField();
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+        {
+            startButton.onClick.Invoke();  
+        }
+    }
 
     public void SaveNickName()
     {
-        GameManager.Instance.PlayerNickName = inputField.text;
-        SceneManager.LoadSceneAsync("Game");
+        if (!string.IsNullOrEmpty(inputField.text)) 
+        {
+            GameManager.Instance.PlayerNickName = inputField.text;
+            SceneManager.LoadSceneAsync("Game");
+        }
     }
 }
