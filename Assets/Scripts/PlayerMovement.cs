@@ -17,11 +17,14 @@ public class PlayerMovement : NetworkBehaviour
     public Camera Camera;
     public float _rotationvelocity;
 
-    // private void Start()
-    // {
-    //     Cursor.lockState = CursorLockMode.Locked;
-    //     Cursor.visible = false;
-    // }
+    // Chat açıldığında hareketi durdurmak için flag
+    public bool isChatOpen = false;
+
+    private void Start()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
 
     private void Awake()
     {
@@ -31,7 +34,8 @@ public class PlayerMovement : NetworkBehaviour
 
     void Update()
     {
-        if (HasStateAuthority == false)
+        // Chat açıkken hareketleri engelle
+        if (isChatOpen || HasStateAuthority == false)
         {
             return;
         }
@@ -58,7 +62,8 @@ public class PlayerMovement : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
-        if (HasStateAuthority == false)
+        // Chat açıkken hareketleri engelle
+        if (isChatOpen || HasStateAuthority == false)
         {
             return;
         }
@@ -104,7 +109,8 @@ public class PlayerMovement : NetworkBehaviour
 
     public override void Render()
     {
-        if (HasStateAuthority == false)
+        // Chat açıkken hareketleri engelle
+        if (isChatOpen || HasStateAuthority == false)
         {
             return;
         }
@@ -137,7 +143,6 @@ public class PlayerMovement : NetworkBehaviour
             _animator.SetTrigger("Attack2");
         }
     }
-
 
     public override void Spawned()
     {

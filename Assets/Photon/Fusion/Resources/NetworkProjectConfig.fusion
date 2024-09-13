@@ -16,7 +16,7 @@
         "InputDataWordCount": 0,
         "ReplicationFeatures": 1,
         "InputTransferMode": 0,
-        "PlayerCount": 10,
+        "PlayerCount": 100,
         "TickRateSelection": {
             "Client": 64,
             "ServerIndex": 0,
@@ -25,7 +25,7 @@
         }
     },
     "Network": {
-        "ConnectionTimeout": 10.0,
+        "ConnectionTimeout": 120.0,
         "ConnectionShutdownTime": 1.0,
         "ReliableDataTransferModes": 3
     },
