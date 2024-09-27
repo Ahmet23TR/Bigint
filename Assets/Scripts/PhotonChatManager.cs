@@ -16,13 +16,17 @@ public class PhotonChatManager : MonoBehaviour, IChatClientListener
 
     [SerializeField] GameObject chatPanel;  
     [SerializeField] InputField chatField;  
+    [SerializeField] Text chatDisplay;
+    [SerializeField] Button chatButton;
     private bool isChatOpen = false;        
 
     void Start()
     {
-        // Başlangıçta chat paneli kapalı 
-        chatPanel.SetActive(false);
+        chatPanel.SetActive(false);  // Chat paneli başlangıçta kapalı
+        chatField.gameObject.SetActive(false);  // Input alanı kapalı
+        chatDisplay.gameObject.SetActive(false);  // Mesajlar başlangıçta gizli
     }
+
 
     void Update()
     {
@@ -34,6 +38,7 @@ public class PhotonChatManager : MonoBehaviour, IChatClientListener
         // Tab tuşuna basıldığında chat'i aç/kapat
         if (Input.GetKeyDown(KeyCode.Tab))
         {
+            Debug.Log("Tab'a basıldı");
             ToggleChat();
         }
 
@@ -48,7 +53,12 @@ public class PhotonChatManager : MonoBehaviour, IChatClientListener
     {
         isChatOpen = !isChatOpen;  // Chat açık mı kapalı mı tersine çevir
 
+        // Tab tuşuna basıldığında tüm chat arayüzü (panel, field, display) aktif/pasif hale gelsin
         chatPanel.SetActive(isChatOpen);
+        chatField.gameObject.SetActive(isChatOpen);
+        chatDisplay.gameObject.SetActive(isChatOpen);
+        chatButton.gameObject.SetActive(isChatOpen);
+
 
         if (isChatOpen && !isConnected)
         {
@@ -58,20 +68,20 @@ public class PhotonChatManager : MonoBehaviour, IChatClientListener
         // Karakter hareketini durdur/aktif et
         var playerMovement = FindObjectOfType<PlayerMovement>();
         if (playerMovement != null)
-    {
-        playerMovement.isChatOpen = isChatOpen;
-
-        // Chat açıldığında animasyonları durdur
-        if (isChatOpen)
         {
-            Animator animator = playerMovement.GetComponent<Animator>();
-            if (animator != null)
+            playerMovement.isChatOpen = isChatOpen;
+
+            // Chat açıldığında animasyonları durdur
+            if (isChatOpen)
             {
-                animator.SetBool("isWalking", false);
-                animator.SetBool("isRunning", false);
+                Animator animator = playerMovement.GetComponent<Animator>();
+                if (animator != null)
+                {
+                    animator.SetBool("isWalking", false);
+                    animator.SetBool("isRunning", false);
+                }
             }
         }
-    }
 
         if (isChatOpen)
         {
@@ -151,7 +161,7 @@ public class PhotonChatManager : MonoBehaviour, IChatClientListener
     #region General
     string privateReceiver = "";
     string currentChat;
-    [SerializeField] Text chatDisplay;
+
 
     #endregion General
 
@@ -215,9 +225,30 @@ public class PhotonChatManager : MonoBehaviour, IChatClientListener
         for (int i = 0; i < senders.Length; i++)
         {
             msgs = string.Format("{0}: {1}", senders[i], messages[i]);
-            chatDisplay.text += "\n" + msgs;
+            chatDisplay.text += "\n" + msgs;  // Mesajı chat display'de göster
             Debug.Log(msgs);
+
+            if(!isChatOpen)
+            {
+                StartCoroutine(ShowMessageTemporarily(10f));  // 10 saniye boyunca mesajı göster
+            }
         }
+    }
+
+    private IEnumerator ShowMessageTemporarily(float delay)
+    {
+        // Sadece chat display'i aktif yap
+        chatDisplay.gameObject.SetActive(true);
+        chatButton.gameObject.SetActive(false);
+        chatPanel.SetActive(true); 
+
+
+        yield return new WaitForSeconds(delay);
+
+        // 10 saniye sonra chat display'i tekrar gizle
+        chatDisplay.gameObject.SetActive(false);
+        chatButton.gameObject.SetActive(false);
+        chatPanel.SetActive(false);  
     }
 
     public void OnPrivateMessage(string sender, object message, string channelName)

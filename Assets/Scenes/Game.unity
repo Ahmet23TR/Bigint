@@ -1145,9 +1145,17 @@ PrefabInstance:
       value: 0.0001001358
       objectReference: {fileID: 0}
     - target: {fileID: 2705705936893431210, guid: a518bcae71feb4277b0065a3b719e101, type: 3}
+      propertyPath: m_Text
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2705705936893431210, guid: a518bcae71feb4277b0065a3b719e101, type: 3}
       propertyPath: m_FontData.m_Font
       value: 
       objectReference: {fileID: 12800000, guid: d40a1e34a3063452e9d292531f1fc3bf, type: 3}
+    - target: {fileID: 2705705936893431210, guid: a518bcae71feb4277b0065a3b719e101, type: 3}
+      propertyPath: m_FontData.m_Alignment
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2822793453728542773, guid: a518bcae71feb4277b0065a3b719e101, type: 3}
       propertyPath: m_SizeDelta.y
       value: 412.8935
@@ -1261,6 +1269,10 @@ PrefabInstance:
       value: ChatManager
       objectReference: {fileID: 0}
     - target: {fileID: 8154336206561178718, guid: a518bcae71feb4277b0065a3b719e101, type: 3}
+      propertyPath: chatButton
+      value: 
+      objectReference: {fileID: 3598222384301057906}
+    - target: {fileID: 8154336206561178718, guid: a518bcae71feb4277b0065a3b719e101, type: 3}
       propertyPath: playerNickname
       value: 
       objectReference: {fileID: 1475427189658513763, guid: ac49588b502a54c0184f2bccdda9cccf, type: 3}
@@ -1301,6 +1313,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a518bcae71feb4277b0065a3b719e101, type: 3}
+--- !u!114 &3598222384301057906 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1739983748736734744, guid: a518bcae71feb4277b0065a3b719e101, type: 3}
+  m_PrefabInstance: {fileID: 3598222384301057905}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
