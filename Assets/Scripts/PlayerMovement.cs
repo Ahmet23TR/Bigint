@@ -65,6 +65,7 @@ public class PlayerMovement : NetworkBehaviour
         // Chat açıkken hareketleri engelle
         if (isChatOpen || HasStateAuthority == false)
         {
+            ApplyGravity();
             return;
         }
 
@@ -146,6 +147,16 @@ public class PlayerMovement : NetworkBehaviour
         {
             Camera = Camera.main;
             Camera.GetComponent<ThirdPersonCamera>().Target = transform;
+        }
+    }
+
+    void ApplyGravity()
+    {
+        // Yerçekimi etkisini uygula
+        if (!_controller.isGrounded)
+        {
+            _velocity.y += GravityValue * Time.deltaTime; // GravityValue sabit bir negatif değer (örneğin -9.81)
+            _controller.Move(new Vector3(0, _velocity.y, 0) * Time.deltaTime); // Sadece dikey hareket
         }
     }
 }

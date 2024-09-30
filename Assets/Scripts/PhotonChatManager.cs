@@ -77,11 +77,13 @@ public class PhotonChatManager : MonoBehaviour, IChatClientListener
             chatField.ActivateInputField();
             DisableCharacterMovement();
             DisableCharacterAnimation();
+            PlayerSpawner.LocalPlayerInstance.GetComponent<GravityController>().enabled = true;
         }
         else
         {
             EnableCharacterMovement();
             EnableCharacterAnimation();
+            PlayerSpawner.LocalPlayerInstance.GetComponent<GravityController>().enabled = false;
         }
     }
 
