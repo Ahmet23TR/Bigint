@@ -18,13 +18,21 @@ public class PhotonChatManager : MonoBehaviour, IChatClientListener
     [SerializeField] InputField chatField;  
     [SerializeField] Text chatDisplay;
     [SerializeField] Button chatButton;
-    private bool isChatOpen = false;        
+    private bool isChatOpen = false;  
+
+    private NetworkRunner runner; // NetworkRunner referansı    
 
     void Start()
     {
         chatPanel.SetActive(false);  // Chat paneli başlangıçta kapalı
         chatField.gameObject.SetActive(false);  // Input alanı kapalı
         chatDisplay.gameObject.SetActive(false);  // Mesajlar başlangıçta gizli
+
+        runner = FindObjectOfType<NetworkRunner>(); // Sahnedeki NetworkRunner'ı bul
+        if (runner == null)
+        {
+            Debug.LogError("NetworkRunner bulunamadı!");
+        }
     }
 
 
@@ -53,7 +61,6 @@ public class PhotonChatManager : MonoBehaviour, IChatClientListener
     {
         isChatOpen = !isChatOpen;  // Chat açık mı kapalı mı tersine çevir
 
-        // Tab tuşuna basıldığında tüm chat arayüzü (panel, field, display) aktif/pasif hale gelsin
         chatPanel.SetActive(isChatOpen);
         chatField.gameObject.SetActive(isChatOpen);
         chatDisplay.gameObject.SetActive(isChatOpen);
@@ -65,32 +72,16 @@ public class PhotonChatManager : MonoBehaviour, IChatClientListener
             ChatConnectOnClick();
         }
 
-        // Karakter hareketini durdur/aktif et
-        var playerMovement = FindObjectOfType<PlayerMovement>();
-        if (playerMovement != null)
-        {
-            playerMovement.isChatOpen = isChatOpen;
-
-            // Chat açıldığında animasyonları durdur
-            if (isChatOpen)
-            {
-                Animator animator = playerMovement.GetComponent<Animator>();
-                if (animator != null)
-                {
-                    animator.SetBool("isWalking", false);
-                    animator.SetBool("isRunning", false);
-                }
-            }
-        }
-
         if (isChatOpen)
         {
             chatField.ActivateInputField();
             DisableCharacterMovement();
+            DisableCharacterAnimation();
         }
         else
         {
             EnableCharacterMovement();
+            EnableCharacterAnimation();
         }
     }
 
@@ -108,53 +99,51 @@ public class PhotonChatManager : MonoBehaviour, IChatClientListener
 
     void DisableCharacterMovement()
     {
-        var playerController = FindObjectOfType<PlayerMovement>(); 
-        if (playerController == null)
+        if (PlayerSpawner.LocalPlayerInstance == null)
         {
-            Debug.LogError("PlayerController bulunamadı!");
+            Debug.LogError("Yerel oyuncu bulunamadı!");
             return;
         }
 
-        var networkObject = playerController.GetComponent<NetworkObject>();
-        if (networkObject == null)
-        {
-            Debug.LogError("NetworkObject bulunamadı!");
-            return;
-        }
-
-        if (networkObject.HasInputAuthority)
-        {
-            Debug.Log("Yerel oyuncu, hareket devre dışı bırakılıyor.");
-            playerController.enabled = false; 
-        }
-        else
-        {
-            Debug.Log("Bu oyuncu yerel değil, hareketi devre dışı bırakmıyoruz.");
-        }
+        // Hareketi devre dışı bırak
+        PlayerSpawner.LocalPlayerInstance.enabled = false;
+        Debug.Log("Yerel oyuncu, hareket devre dışı bırakıldı.");
     }
 
     void EnableCharacterMovement()
     {
-        var playerController = FindObjectOfType<PlayerMovement>();
-        if (playerController == null)
+        if (PlayerSpawner.LocalPlayerInstance == null)
         {
-            Debug.LogError("PlayerController bulunamadı!");
+            Debug.LogError("Yerel oyuncu bulunamadı!");
             return;
         }
 
-        var networkObject = playerController.GetComponent<NetworkObject>();
-        if (networkObject == null)
-        {
-            Debug.LogError("NetworkObject bulunamadı!");
-            return;
-        }
+        // Hareketi tekrar aktif et
+        PlayerSpawner.LocalPlayerInstance.enabled = true;
+        Debug.Log("Yerel oyuncu, hareket tekrar etkinleştirildi.");
+    }
 
-        if (networkObject.HasInputAuthority)
+    void DisableCharacterAnimation()
+    {
+        if (PlayerSpawner.LocalPlayerAnimator != null)
         {
-            Debug.Log("Yerel oyuncu, hareket tekrar etkinleştiriliyor.");
-            playerController.enabled = true; 
+            PlayerSpawner.LocalPlayerAnimator.SetBool("isWalking", false);
+            PlayerSpawner.LocalPlayerAnimator.SetBool("isRunning", false);
         }
     }
+
+    void EnableCharacterAnimation()
+    {
+        if (PlayerSpawner.LocalPlayerAnimator != null)
+        {
+            bool isRunning = Input.GetKey(KeyCode.LeftShift);
+            bool isMoving = Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0;
+
+            PlayerSpawner.LocalPlayerAnimator.SetBool("isWalking", isMoving && !isRunning);
+            PlayerSpawner.LocalPlayerAnimator.SetBool("isRunning", isMoving && isRunning);
+        }
+    }
+
 
     #endregion Setup
 

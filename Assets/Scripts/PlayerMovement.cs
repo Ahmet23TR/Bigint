@@ -35,7 +35,7 @@ public class PlayerMovement : NetworkBehaviour
     void Update()
     {
         // Chat açıkken hareketleri engelle
-        if (isChatOpen || HasStateAuthority == false)
+        if (isChatOpen && HasStateAuthority)
         {
             return;
         }
