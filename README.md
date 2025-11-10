@@ -2,6 +2,8 @@
 
 A Unity project that demonstrates multiplayer functionality using Photon (PUN / Fusion) and contains gameplay scripts for a simple networked sample. The repository includes Photon SDK code and demo scenes, plus local game logic in `Assets/Scripts`.
 
+To play demo: https://ahmet23tr.itch.io/3d-multiplayer-platforming-game
+
 ## Key points
 - Engine: Unity (open the project folder with Unity Editor)
 - Networking: Photon (PUN / Fusion packages included under `Assets/Photon`)
